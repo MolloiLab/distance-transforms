@@ -7,27 +7,16 @@ using InteractiveUtils
 # ╔═╡ 7ef078de-23f9-11ed-104e-5f232d5f92b1
 # ╠═╡ show_logs = false
 begin
-	let
-		using Pkg
-		Pkg.activate(mktempdir())
-		Pkg.Registry.update()
-		Pkg.add("Revise")
-		Pkg.add("BenchmarkTools")
-		Pkg.add("CairoMakie")
-		Pkg.add("PlutoUI")
-		Pkg.add("DataFrames")
-		Pkg.add("CSV")
-		Pkg.add("CUDA")
-		Pkg.develop(path="/Users/daleblack/Google Drive/dev/julia/DistanceTransforms")
-	end
+	using Pkg
+	Pkg.activate(".")
 	using Revise
 	using PlutoUI
 	using BenchmarkTools
-	using CairoMakie
 	using DataFrames
 	using CSV
 	using CUDA
 	using DistanceTransforms
+	using Losers
 end
 
 # ╔═╡ bb360c60-7eb3-4fea-91c9-fc53bc643c45
@@ -38,14 +27,12 @@ md"""
 # Distance Transforms
 
 TODO:
-- Add SquaredEuclidean 2D GPU
 - Add Wenbo 2D
 - Add Wenbo 2D In-Place
 - Add Wenbo 2D Threaded
 - Add Wenbo 2D GPU
 
 
-- Add SquaredEuclidean 3D GPU
 - Add Wenbo 3D
 - Add Wenbo 3D In-Place
 - Add Wenbo 3D Threaded
@@ -76,7 +63,7 @@ begin
 
 	sizes = []
 	
-	for n in 1:10:100
+	for n in 1:2:10
 		_size = n*n
 		push!(sizes, _size)
 		
@@ -140,7 +127,7 @@ begin
 
 	sizes_3D = []
 	
-	for n in 1:10:100
+	for n in 1:2:10
 		_size = n^3
 		push!(sizes_3D, _size)
 		
@@ -186,11 +173,11 @@ md"""
 """
 
 # ╔═╡ 01f15cd7-a57a-4963-b96f-08404be84e6f
-if CUDA.functional()
+if has_cuda_gpu()
 	sedt_gpu_mean_2D = []
 	sedt_gpu_std_2D = []
 	
-	for n in 1:10:100
+	for n in 1:2:10
 		
 		# SEDT GPU
 		f = CuArray(boolean_indicator(rand([0, 1], n, n)))
@@ -211,11 +198,11 @@ md"""
 """
 
 # ╔═╡ 39035604-5bdd-4267-a1ce-1610d4b815c0
-if CUDA.functional()
+if has_cuda_gpu()
 	sedt_gpu_mean_3D = []
 	sedt_gpu_std_3D = []
 	
-	for n in 1:10:100
+	for n in 1:2:10
 		
 		# SEDT GPU
 		f = CuArray(boolean_indicator(rand([0, 1], n, n, n)))
@@ -236,39 +223,10 @@ md"""
 """
 
 # ╔═╡ 75fba553-8d26-4ecb-8807-1621e2fefed3
-# if CUDA.functional()
-# 	path = ""
-	# df = DataFrame(
-	# 	edt_mean_2D = Float64.(edt_mean_2D),
-	# 	edt_std_2D = Float64.(edt_std_2D),
-	# 	sedt_mean_2D = Float64.(sedt_mean_2D),
-	# 	sedt_std_2D = Float64.(sedt_std_2D),
-	# 	sedt_inplace_mean_2D = Float64.(sedt_inplace_mean_2D),
-	# 	sedt_inplace_std_2D = Float64.(sedt_inplace_std_2D),
-	# 	sedt_threaded_mean_2D = Float64.(sedt_threaded_mean_2D),
-	# 	sedt_threaded_std_2D = Float64.(sedt_threaded_std_2D),
-	# 	sedt_gpu_mean_2D = Float64.(sedt_gpu_mean_2D),
-	# 	sedt_gpu_std_2D = Float64.(sedt_gpu_std_2D),
-	# 	edt_mean_3D = Float64.(edt_mean_3D),
-	# 	edt_std_3D = Float64.(edt_std_3D),
-	# 	sedt_mean_3D = Float64.(sedt_mean_3D),
-	# 	sedt_std_3D = Float64.(sedt_std_3D),
-	# 	sedt_inplace_mean_3D = Float64.(sedt_inplace_mean_3D),
-	# 	sedt_inplace_std_3D = Float64.(sedt_inplace_std_3D),
-	# 	sedt_threaded_mean_3D = Float64.(sedt_threaded_mean_3D),
-	# 	sedt_threaded_std_3D = Float64.(sedt_threaded_std_3D)
-	# 	sedt_gpu_mean_3D = Float64.(sedt_gpu_mean_3D),
-	# 	sedt_gpu_std_3D = Float64.(sedt_gpu_std_3D)
-	# )
-# 	CSV.write(df, path)
-# else
-# 	@show "No GPU available"
-# end
-
-# ╔═╡ b23d7941-8cd0-49f6-bdac-f5bb05de2cdd
-begin
-	path = "/Users/daleblack/Google Drive/dev/MolloiLab/distance-transforms/julia_timings.csv"
+if has_cuda_gpu()
+	path = raw"C:\Users\wenbl13\Desktop\dale\distance-transforms\julia_timings_gpu.csv"
 	df = DataFrame(
+		nthreads = nthreads,
 		sizes_2D = Float64.(sizes_2D),
 		edt_mean_2D = Float64.(edt_mean_2D),
 		edt_std_2D = Float64.(edt_std_2D),
@@ -278,6 +236,8 @@ begin
 		sedt_inplace_std_2D = Float64.(sedt_inplace_std_2D),
 		sedt_threaded_mean_2D = Float64.(sedt_threaded_mean_2D),
 		sedt_threaded_std_2D = Float64.(sedt_threaded_std_2D),
+		sedt_gpu_mean_2D = Float64.(sedt_gpu_mean_2D),
+		sedt_gpu_std_2D = Float64.(sedt_gpu_std_2D),
 		sizes_3D = Float64.(sizes_3D),
 		edt_mean_3D = Float64.(edt_mean_3D),
 		edt_std_3D = Float64.(edt_std_3D),
@@ -287,14 +247,93 @@ begin
 		sedt_inplace_std_3D = Float64.(sedt_inplace_std_3D),
 		sedt_threaded_mean_3D = Float64.(sedt_threaded_mean_3D),
 		sedt_threaded_std_3D = Float64.(sedt_threaded_std_3D),
+		sedt_gpu_mean_3D = Float64.(sedt_gpu_mean_3D),
+		sedt_gpu_std_3D = Float64.(sedt_gpu_std_3D)
 	)
 	CSV.write(path, df)
+else
+	@show "No GPU available"
 end
+
+# ╔═╡ b23d7941-8cd0-49f6-bdac-f5bb05de2cdd
+# begin
+# 	path = "/Users/daleblack/Google Drive/dev/MolloiLab/distance-transforms/julia_timings.csv"
+# 	df = DataFrame(
+# 		nthreads = nthreads,
+# 		sizes_2D = Float64.(sizes_2D),
+# 		edt_mean_2D = Float64.(edt_mean_2D),
+# 		edt_std_2D = Float64.(edt_std_2D),
+# 		sedt_mean_2D = Float64.(sedt_mean_2D),
+# 		sedt_std_2D = Float64.(sedt_std_2D),
+# 		sedt_inplace_mean_2D = Float64.(sedt_inplace_mean_2D),
+# 		sedt_inplace_std_2D = Float64.(sedt_inplace_std_2D),
+# 		sedt_threaded_mean_2D = Float64.(sedt_threaded_mean_2D),
+# 		sedt_threaded_std_2D = Float64.(sedt_threaded_std_2D),
+# 		sizes_3D = Float64.(sizes_3D),
+# 		edt_mean_3D = Float64.(edt_mean_3D),
+# 		edt_std_3D = Float64.(edt_std_3D),
+# 		sedt_mean_3D = Float64.(sedt_mean_3D),
+# 		sedt_std_3D = Float64.(sedt_std_3D),
+# 		sedt_inplace_mean_3D = Float64.(sedt_inplace_mean_3D),
+# 		sedt_inplace_std_3D = Float64.(sedt_inplace_std_3D),
+# 		sedt_threaded_mean_3D = Float64.(sedt_threaded_mean_3D),
+# 		sedt_threaded_std_3D = Float64.(sedt_threaded_std_3D),
+# 	)
+# 	CSV.write(path, df)
+# end
 
 # ╔═╡ 2d77bfc2-0457-435f-af13-6b70ef07c17d
 md"""
 # Loss Functions
 """
+
+# ╔═╡ ceb27653-b664-4dc1-83f2-108eaf52cd38
+md"""
+## Regular
+"""
+
+# ╔═╡ 79b6589a-02dc-4508-bf00-02ccb477d701
+function dice(ŷ, y, ϵ=1e-5)
+    return 1 - ((2 * sum(ŷ .* y) + ϵ) / (sum(ŷ .* ŷ) + sum(y .* y) + ϵ))
+end
+
+# ╔═╡ 489cc875-6e8b-41e5-80c2-8212be59fb6f
+begin
+	dice_mean = []
+	dice_std = []
+	
+	hausdorff_mean = []
+	hausdorff_mean = []
+
+	sizes_losses = []
+	
+	for n in 2:3
+		_size = n^2
+		
+		
+		# DICE
+		local f
+		f = Int.(rand([0, 1], n, n))
+		dice_loss = @benchmark dice(f, f)
+		append!(sizes_losses, _size)
+		
+		append!(dice_mean, BenchmarkTools.mean(dice_loss).time)
+		append!(dice_std, BenchmarkTools.std(dice_loss).time)
+		
+		# Hausdorff
+		f_dt = euclidean(f)
+		hd_loss = @benchmark hausdorff(f, f, f_dt, f_dt)
+
+		append!(hausdorff_mean, BenchmarkTools.mean(hd_loss).time)
+		append!(hausdorff_mean, BenchmarkTools.std(hd_loss).time)
+	end
+end
+
+# ╔═╡ eb6ef588-bcf5-445f-bdad-9ea7783113fe
+dice_mean
+
+# ╔═╡ 21843c16-7087-479b-be85-bb7a9d42ebe6
+hausdorff_mean
 
 # ╔═╡ Cell order:
 # ╠═7ef078de-23f9-11ed-104e-5f232d5f92b1
@@ -314,3 +353,8 @@ md"""
 # ╠═75fba553-8d26-4ecb-8807-1621e2fefed3
 # ╠═b23d7941-8cd0-49f6-bdac-f5bb05de2cdd
 # ╟─2d77bfc2-0457-435f-af13-6b70ef07c17d
+# ╟─ceb27653-b664-4dc1-83f2-108eaf52cd38
+# ╠═79b6589a-02dc-4508-bf00-02ccb477d701
+# ╠═489cc875-6e8b-41e5-80c2-8212be59fb6f
+# ╠═eb6ef588-bcf5-445f-bdad-9ea7783113fe
+# ╠═21843c16-7087-479b-be85-bb7a9d42ebe6

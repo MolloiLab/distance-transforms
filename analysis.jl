@@ -7,27 +7,17 @@ using InteractiveUtils
 # ╔═╡ 9b9938f3-a49e-43e4-abf8-478216eefc58
 # ╠═╡ show_logs = false
 begin
-	let
-		using Pkg
-		Pkg.activate(mktempdir())
-		Pkg.Registry.update()
-		Pkg.add("Revise")
-		Pkg.add("BenchmarkTools")
-		Pkg.add("CairoMakie")
-		Pkg.add("PlutoUI")
-		Pkg.add("DataFrames")
-		Pkg.add("CSV")
-		Pkg.add("CUDA")
-		Pkg.develop(path="/Users/daleblack/Google Drive/dev/julia/DistanceTransforms")
-	end
+	using Pkg
+	Pkg.activate(".")
 	using Revise
 	using PlutoUI
-	using BenchmarkTools
 	using CairoMakie
+	using BenchmarkTools
 	using DataFrames
 	using CSV
 	using CUDA
 	using DistanceTransforms
+	using Losers
 end
 
 # ╔═╡ 912daec8-3954-4b64-908d-75175ce2dfd2
@@ -62,10 +52,12 @@ md"""
 """
 
 # ╔═╡ 56ba90ce-f698-42c1-840d-b36af11e6de8
-path = "/Users/daleblack/Google Drive/dev/MolloiLab/distance-transforms/"
+# path = "/Users/daleblack/Google Drive/dev/MolloiLab/distance-transforms/julia_timings.csv"
+# path = raw"C:\Users\wenbl13\Desktop\dale\distance-transforms\julia_timings.csv"
+path = raw"C:\Users\wenbl13\Desktop\dale\distance-transforms\julia_timings_gpu.csv"
 
 # ╔═╡ 6382c6cd-9d68-4e65-862e-79af21b86ff6
-df = CSV.read(string(path, "julia_timings.csv"), DataFrame);
+df = CSV.read(string(path), DataFrame);
 
 # ╔═╡ b5a90a40-eb61-49c2-8115-78bf1d67f9bb
 begin
@@ -117,10 +109,13 @@ function dt_timings_2D()
 	sc4 = scatter!(ax1, df[!, :sizes_2D], df[!, :sedt_threaded_mean_2D])
     errorbars!(ax1, df[!, :sizes_2D], df[!, :sedt_threaded_mean_2D], df[!, :sedt_threaded_std_2D])
 
+	sc5 = scatter!(ax1, df[!, :sizes_2D], df[!, :sedt_gpu_mean_2D])
+    errorbars!(ax1, df[!, :sizes_2D], df[!, :sedt_gpu_mean_2D], df[!, :sedt_gpu_std_2D])
+
 	f[1, 2] = Legend(
         f,
-        [sc1, sc2, sc3, sc4],
-        ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded"];
+        [sc1, sc2, sc3, sc4, sc5],
+        ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded", "Squared Euclidean GPU"];
         framevisible=false,
     )
 
@@ -163,10 +158,13 @@ function dt_timings_3D()
 	sc4 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D])
     errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D], df[!, :sedt_threaded_std_3D])
 
+	sc5 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_gpu_mean_3D])
+    errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_gpu_mean_3D], df[!, :sedt_gpu_std_3D])
+
 	f[1, 2] = Legend(
         f,
-        [sc1, sc2, sc3, sc4],
-        ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded"];
+        [sc1, sc2, sc3, sc4, sc5],
+        ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded", "Squared Euclidean GPU"];
         framevisible=false,
     )
 
@@ -183,7 +181,7 @@ end
 # ╔═╡ Cell order:
 # ╠═9b9938f3-a49e-43e4-abf8-478216eefc58
 # ╠═912daec8-3954-4b64-908d-75175ce2dfd2
-# ╠═f1da69f4-72c4-40cc-b51e-d38e0cc8ecd1
+# ╟─f1da69f4-72c4-40cc-b51e-d38e0cc8ecd1
 # ╟─25a6f92a-f171-49b1-b428-95f76dd852a8
 # ╠═56ba90ce-f698-42c1-840d-b36af11e6de8
 # ╠═6382c6cd-9d68-4e65-862e-79af21b86ff6
