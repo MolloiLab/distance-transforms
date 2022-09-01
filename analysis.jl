@@ -30,6 +30,9 @@ begin
 	using DistanceTransforms
 end
 
+# ╔═╡ a50ada90-d8fb-4a74-8bd5-7b50feae22c4
+"hi"
+
 # ╔═╡ 912daec8-3954-4b64-908d-75175ce2dfd2
 TableOfContents()
 
@@ -130,45 +133,45 @@ md"""
 """
 
 # ╔═╡ 31503e94-39de-4a1e-921e-8c5644438234
-function dt_timings_3D()
-    f = Figure()
-    ax1 = Axis(f[1, 1])
-	# xlims!(ax1; low=0, high=x_new[end] + 10)
-	# ylims!(ax1; low=0)
-	# ax1.xticks = vcat(0, 1:length(sizes))
-	ax1.xlabel = "Number of Elements"
-    ax1.ylabel = "Time (ns)"
-    ax1.title = "Distance Transforms (2D)"
+# function dt_timings_3D()
+#     f = Figure()
+#     ax1 = Axis(f[1, 1])
+# 	# xlims!(ax1; low=0, high=x_new[end] + 10)
+# 	# ylims!(ax1; low=0)
+# 	# ax1.xticks = vcat(0, 1:length(sizes))
+# 	ax1.xlabel = "Number of Elements"
+#     ax1.ylabel = "Time (ns)"
+#     ax1.title = "Distance Transforms (2D)"
 
 	
-    sc1 = scatter!(ax1, df[!, :sizes_3D], df[!, :edt_mean_3D])
-    errorbars!(ax1, df[!, :sizes_3D], df[!, :edt_mean_3D], df[!, :edt_std_3D])
+#     sc1 = scatter!(ax1, df[!, :sizes_3D], df[!, :edt_mean_3D])
+#     errorbars!(ax1, df[!, :sizes_3D], df[!, :edt_mean_3D], df[!, :edt_std_3D])
 
-	sc2 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_mean_3D])
-    errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_mean_3D], df[!, :sedt_std_3D])
+# 	sc2 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_mean_3D])
+#     errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_mean_3D], df[!, :sedt_std_3D])
 
-	sc3 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_inplace_mean_3D])
-    errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_inplace_mean_3D], df[!, :sedt_inplace_std_3D])
+# 	sc3 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_inplace_mean_3D])
+#     errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_inplace_mean_3D], df[!, :sedt_inplace_std_3D])
 
-	sc4 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D])
-    errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D], df[!, :sedt_threaded_std_3D])
+# 	sc4 = scatter!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D])
+#     errorbars!(ax1, df[!, :sizes_3D], df[!, :sedt_threaded_mean_3D], df[!, :sedt_threaded_std_3D])
 
-	f[1, 2] = Legend(
-        f,
-        [sc1, sc2, sc3, sc4],
-        ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded"];
-        framevisible=false,
-    )
+# 	f[1, 2] = Legend(
+#         f,
+#         [sc1, sc2, sc3, sc4],
+#         ["Euclidean", "Squared Euclidean", "Squared Euclidean In-Place", "Squared Euclidean Threaded"];
+#         framevisible=false,
+#     )
 
-	 # save("/Users/daleblack/Google Drive/Research/Papers/My Papers/cac-simulation/figures/linear_reg_norm.png", f)
+# 	 # save("/Users/daleblack/Google Drive/Research/Papers/My Papers/cac-simulation/figures/linear_reg_norm.png", f)
 	
-	return f
-end
+# 	return f
+# end
 
 # ╔═╡ 584d05c6-c83d-45e5-973f-baf838bd16d3
-with_theme(medphys_theme) do
-    dt_timings_3D()
-end
+# with_theme(medphys_theme) do
+#     dt_timings_3D()
+# end
 
 # ╔═╡ a7c614f9-9f25-468f-9468-8c8de6bef1cb
 md"""
@@ -225,6 +228,7 @@ end
 
 # ╔═╡ Cell order:
 # ╠═9b9938f3-a49e-43e4-abf8-478216eefc58
+# ╠═a50ada90-d8fb-4a74-8bd5-7b50feae22c4
 # ╠═912daec8-3954-4b64-908d-75175ce2dfd2
 # ╠═f1da69f4-72c4-40cc-b51e-d38e0cc8ecd1
 # ╟─25a6f92a-f171-49b1-b428-95f76dd852a8
@@ -234,7 +238,7 @@ end
 # ╟─69d55f25-7b57-4589-b0ad-3bdbf4a256e6
 # ╟─12b298f3-bcd2-41bc-a95a-ed53f8996f36
 # ╟─73d71b70-c19a-4d74-b703-237c9f1a7603
-# ╟─31503e94-39de-4a1e-921e-8c5644438234
+# ╠═31503e94-39de-4a1e-921e-8c5644438234
 # ╟─584d05c6-c83d-45e5-973f-baf838bd16d3
 # ╟─a7c614f9-9f25-468f-9468-8c8de6bef1cb
 # ╟─465a96d1-39fa-48ee-a782-54855ece6258
