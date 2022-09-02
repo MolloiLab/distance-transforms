@@ -30,9 +30,6 @@ begin
 	using DistanceTransforms
 end
 
-# ╔═╡ a50ada90-d8fb-4a74-8bd5-7b50feae22c4
-"hi"
-
 # ╔═╡ 912daec8-3954-4b64-908d-75175ce2dfd2
 TableOfContents()
 
@@ -228,14 +225,13 @@ end
 
 # ╔═╡ Cell order:
 # ╠═9b9938f3-a49e-43e4-abf8-478216eefc58
-# ╠═a50ada90-d8fb-4a74-8bd5-7b50feae22c4
 # ╠═912daec8-3954-4b64-908d-75175ce2dfd2
 # ╠═f1da69f4-72c4-40cc-b51e-d38e0cc8ecd1
 # ╟─25a6f92a-f171-49b1-b428-95f76dd852a8
 # ╠═56ba90ce-f698-42c1-840d-b36af11e6de8
 # ╠═6382c6cd-9d68-4e65-862e-79af21b86ff6
 # ╟─a6bc73aa-573b-466c-bb8a-7bb54c376a0e
-# ╟─69d55f25-7b57-4589-b0ad-3bdbf4a256e6
+# ╠═69d55f25-7b57-4589-b0ad-3bdbf4a256e6
 # ╟─12b298f3-bcd2-41bc-a95a-ed53f8996f36
 # ╟─73d71b70-c19a-4d74-b703-237c9f1a7603
 # ╠═31503e94-39de-4a1e-921e-8c5644438234
