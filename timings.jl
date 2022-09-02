@@ -53,7 +53,7 @@ nthreads = Threads.nthreads()
 # ╔═╡ 578eda3b-8f90-4992-87da-d44950f4b891
 num_range = range(1, 1000; length=10)
 
-# ╔═╡ b5b6608f-0b75-495e-a37c-ed45d47fe407
+# ╔═╡ fe40db03-b5f5-4c07-90f8-4dba0eeb6c06
 begin
 	edt_mean_2D = []
 	edt_std_2D = []
@@ -93,9 +93,8 @@ begin
 		# SEDT
 		f = Bool.(rand([0, 1], n, n))
 		b_f = boolean_indicator(f)
-		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
 		tfm = SquaredEuclidean()
-		sedt = @benchmark DistanceTransforms.transform($b_f, $tfm; output=$output, v=$v, z=$z)
+		sedt = @benchmark DistanceTransforms.transform($b_f, $tfm)
 		
 		append!(sedt_mean_2D, BenchmarkTools.mean(sedt).time)
 		append!(sedt_std_2D, BenchmarkTools.std(sedt).time)
@@ -103,9 +102,7 @@ begin
 		# SEDT In-Place
 		f = Bool.(rand([0, 1], n, n))
 		b_f = boolean_indicator(f)
-		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
-		tfm = SquaredEuclidean()
-		sedt_inplace = @benchmark DistanceTransforms.transform!($b_f, $tfm; output=$output, v=$v, z=$z)
+		sedt_inplace = @benchmark DistanceTransforms.transform!($b_f, $tfm)
 		
 		append!(sedt_inplace_mean_2D, BenchmarkTools.mean(sedt_inplace).time)
 		append!(sedt_inplace_std_2D, BenchmarkTools.std(sedt_inplace).time)
@@ -113,9 +110,7 @@ begin
 		# SEDT Threaded
 		f = Bool.(rand([0, 1], n, n))
 		b_f = boolean_indicator(f)
-		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
-		tfm = SquaredEuclidean()
-		sedt_threaded = @benchmark DistanceTransforms.transform!($b_f, $tfm, $nthreads; output=$output, v=$v, z=$z)
+		sedt_threaded = @benchmark DistanceTransforms.transform!($b_f, $tfm, $nthreads)
 		
 		append!(sedt_threaded_mean_2D, BenchmarkTools.mean(sedt_threaded).time)
 		append!(sedt_threaded_std_2D, BenchmarkTools.std(sedt_threaded).time)
@@ -157,6 +152,108 @@ end
 
 # ╔═╡ ccf9ac88-7051-4b13-aaf7-9b38cf209a5e
 sizes_2D = sizes
+
+# ╔═╡ b5b6608f-0b75-495e-a37c-ed45d47fe407
+# begin
+# 	edt_mean_2D = []
+# 	edt_std_2D = []
+	
+# 	sedt_mean_2D = []
+# 	sedt_std_2D = []
+	
+# 	sedt_inplace_mean_2D = []
+# 	sedt_inplace_std_2D = []
+
+# 	sedt_threaded_mean_2D = []
+# 	sedt_threaded_std_2D = []
+
+# 	sedt_threaded_mean_2D_depth = []
+# 	sedt_threaded_std_2D_depth = []
+
+# 	sedt_threaded_mean_2D_nonthread = []
+# 	sedt_threaded_std_2D_nonthread = []
+
+# 	sedt_threaded_mean_2D_worksteal = []
+# 	sedt_threaded_std_2D_worksteal = []
+
+# 	sizes = []
+	
+# 	for n in num_range
+# 		n = Int(n)
+# 		_size = n*n
+# 		append!(sizes, _size)
+		
+# 		# EDT
+# 		f = Bool.(rand([0, 1], n, n))
+# 		edt = @benchmark euclidean($f)
+		
+# 		append!(edt_mean_2D, BenchmarkTools.mean(edt).time)
+# 		append!(edt_std_2D, BenchmarkTools.std(edt).time)
+		
+# 		# SEDT
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		sedt = @benchmark DistanceTransforms.transform($b_f, $tfm; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_mean_2D, BenchmarkTools.mean(sedt).time)
+# 		append!(sedt_std_2D, BenchmarkTools.std(sedt).time)
+		
+# 		# SEDT In-Place
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		sedt_inplace = @benchmark DistanceTransforms.transform!($b_f, $tfm; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_inplace_mean_2D, BenchmarkTools.mean(sedt_inplace).time)
+# 		append!(sedt_inplace_std_2D, BenchmarkTools.std(sedt_inplace).time)
+		
+# 		# SEDT Threaded
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		sedt_threaded = @benchmark DistanceTransforms.transform!($b_f, $tfm, $nthreads; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_threaded_mean_2D, BenchmarkTools.mean(sedt_threaded).time)
+# 		append!(sedt_threaded_std_2D, BenchmarkTools.std(sedt_threaded).time)
+
+# 		# SEDT DepthFirst()
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		ex = DepthFirstEx()
+# 		sedt_threaded_depth = @benchmark DistanceTransforms.transform!($b_f, $tfm, $ex; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_threaded_mean_2D_depth, BenchmarkTools.mean(sedt_threaded_depth).time)
+# 		append!(sedt_threaded_std_2D_depth, BenchmarkTools.std(sedt_threaded_depth).time)
+
+# 		# SEDT NonThreadedEx()
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		ex = NonThreadedEx()
+# 		sedt_threaded_nonthread = @benchmark DistanceTransforms.transform!($b_f, $tfm, $ex; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_threaded_mean_2D_nonthread, BenchmarkTools.mean(sedt_threaded_nonthread).time)
+# 		append!(sedt_threaded_std_2D_nonthread, BenchmarkTools.std(sedt_threaded_nonthread).time)
+
+# 		# SEDT WorkStealingEx()
+# 		f = Bool.(rand([0, 1], n, n))
+# 		b_f = boolean_indicator(f)
+# 		output, v, z = zeros(size(f)), ones(Int32, size(f)), ones(size(f) .+ 1)
+# 		tfm = SquaredEuclidean()
+# 		ex = WorkStealingEx()
+# 		sedt_threaded_worksteal = @benchmark DistanceTransforms.transform!($b_f, $tfm, $ex; output=$output, v=$v, z=$z)
+		
+# 		append!(sedt_threaded_mean_2D_worksteal, BenchmarkTools.mean(sedt_threaded_worksteal).time)
+# 		append!(sedt_threaded_std_2D_worksteal, BenchmarkTools.std(sedt_threaded_worksteal).time)
+# 	end
+# end
 
 # ╔═╡ 47c7ce53-b4f4-4930-a4ce-b681b331f1d8
 md"""
@@ -454,6 +551,7 @@ end
 # ╠═064702c2-cb91-4c19-baab-4586b710f9cf
 # ╠═ccf9ac88-7051-4b13-aaf7-9b38cf209a5e
 # ╠═578eda3b-8f90-4992-87da-d44950f4b891
+# ╠═fe40db03-b5f5-4c07-90f8-4dba0eeb6c06
 # ╠═b5b6608f-0b75-495e-a37c-ed45d47fe407
 # ╟─47c7ce53-b4f4-4930-a4ce-b681b331f1d8
 # ╠═b23d7941-8cd0-49f6-bdac-f5bb05de2cdd
